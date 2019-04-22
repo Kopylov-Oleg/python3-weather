@@ -22,3 +22,7 @@ def console_print_weather(city):
         
     print(text)
 
+def get_real_temp(city):
+    d = get_weather_data(city)
+    return d['current']['temp_c']
+
