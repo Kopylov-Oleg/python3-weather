@@ -38,3 +38,7 @@ def get_day_night(city):
     d = get_weather_data(city)
     return ['ночь', 'день'][d['current']['is_day']]
 
+def get_wind_speed(city):
+    d = get_weather_data(city)
+    return d['current']['wind_kph']
+
