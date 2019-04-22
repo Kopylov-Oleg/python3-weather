@@ -30,3 +30,7 @@ def get_feels_like(city):
     d = get_weather_data(city)
     return d['current']['feelslike_c']
 
+def get_conditions(city):
+    d = get_weather_data(city)
+    return d['current']['condition']['text']
+
