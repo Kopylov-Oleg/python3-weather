@@ -26,3 +26,7 @@ def get_real_temp(city):
     d = get_weather_data(city)
     return d['current']['temp_c']
 
+def get_feels_like(city):
+    d = get_weather_data(city)
+    return d['current']['feelslike_c']
+
