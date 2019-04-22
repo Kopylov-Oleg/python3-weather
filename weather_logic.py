@@ -34,3 +34,7 @@ def get_conditions(city):
     d = get_weather_data(city)
     return d['current']['condition']['text']
 
+def get_day_night(city):
+    d = get_weather_data(city)
+    return ['ночь', 'день'][d['current']['is_day']]
+
