@@ -21,3 +21,4 @@ def console_print_weather(city):
            f"Погодные условия: {conditions}\nВремя суток: {day_night}\nВетер: {wind_speed} км/ч\nВидимость: {visibility}км\n"
         
     print(text)
+
