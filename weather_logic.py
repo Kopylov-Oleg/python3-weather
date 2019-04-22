@@ -42,3 +42,7 @@ def get_wind_speed(city):
     d = get_weather_data(city)
     return d['current']['wind_kph']
 
+def get_visibility(city):
+    d = get_weather_data(city)
+    return d['current']['vis_km']
+
