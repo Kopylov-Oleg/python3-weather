@@ -38,6 +38,7 @@ class Paint(Canvas):
         Canvas.__init__(self, master, *ap, **an)
 
     def draw_weather(self):
+        self.delete("all")
         #messagebox.showinfo("Вы ввели", get_weather_data(self.city))
         #self.create_line(0, 0, self.winfo_width(), self.winfo_height(), fill='red', width=1)
         #self.create_line(0, self.winfo_height(), self.winfo_width(), 0, fill='red', width=1)
