@@ -45,6 +45,9 @@ class Paint(Canvas):
         self.draw_city()
         self.draw_temp()
 
+    def draw_city(self):
+        self.create_text(50, 50, text = self.city.get())
+
     def draw_temp(self):
         temp = str(get_real_temp(self.city.get())) + "°C"
         self.create_text(self.winfo_width() / 2, 3 * self.winfo_height() / 4, text = temp)
