@@ -47,11 +47,16 @@ class Paint(Canvas):
         #messagebox.showinfo("Вы ввели", get_weather_data(self.city))
         self.draw_weather_picture()
         self.draw_city()
+        self.draw_time()
         self.draw_conditions()
         self.draw_temp()
 
     def draw_city(self):
         self.create_text(50, 50, text = self.city.get())
+
+    def draw_time(self):
+        time = "00:00"
+        self.create_text(3 * self.winfo_width() / 4, self.winfo_height() / 5, text = time)
 
     def draw_conditions(self):
         conditions = str(get_conditions(self.city.get()))
