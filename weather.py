@@ -42,10 +42,11 @@ class Paint(Canvas):
         #self.create_line(0, 0, self.winfo_width(), self.winfo_height(), fill='red', width=1)
         #self.create_line(0, self.winfo_height(), self.winfo_width(), 0, fill='red', width=1)
         #self.create_text(self.winfo_width() / 2, 3 * self.winfo_height() / 4, text = get_real_temp(self.city))
+        self.draw_city()
         self.draw_temp()
 
     def draw_temp(self):
-        temp = str(get_real_temp(self.city)) + "°C"
+        temp = str(get_real_temp(self.city.get())) + "°C"
         self.create_text(self.winfo_width() / 2, 3 * self.winfo_height() / 4, text = temp)
         
 
