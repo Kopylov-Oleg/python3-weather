@@ -40,12 +40,10 @@ class Paint(Canvas):
     def draw_weather(self):
         self.delete("all")
         #messagebox.showinfo("Вы ввели", get_weather_data(self.city))
-        self.create_line(0, 0, self.winfo_width(), self.winfo_height(), fill='red', width=1)
-        self.create_line(0, self.winfo_height(), self.winfo_width(), 0, fill='red', width=1)
-        #self.create_text(self.winfo_width() / 2, 3 * self.winfo_height() / 4, text = get_real_temp(self.city))
+        self.draw_weather_picture()
         self.draw_city()
         self.draw_temp()
-        self.draw_conditions()
+        self.draw_conditions()        
 
     def draw_city(self):
         self.create_text(50, 50, text = self.city.get())
@@ -57,7 +55,28 @@ class Paint(Canvas):
     def draw_conditions(self):
         conditions = str(get_conditions(self.city.get()))
         self.create_text(self.winfo_width() / 2, 4 * self.winfo_height() / 5, text = conditions)
-        
+
+    def draw_weather_picture(self):
+        conditions = str(get_conditions(self.city.get()))
+        color = 'black'
+        if (conditions == "Sunny"):
+            color = 'yellow'
+        elif (conditions == "Partly cloudy"):
+            color = 'grey'
+        elif (conditions == "Mist"):
+            color = 'white'
+        elif (conditions == "Light rain"):
+            color = 'light blue'
+        elif (conditions == "Overcast"):
+            color = 'bisque2'
+        elif (conditions == "Clear"):
+            color = 'lightcyan2'
+        elif (conditions == "Patchy light rain with thunder"):
+            color = 'gold3'
+        elif (conditions == "Moderate or heavy rain with thunder"):
+            color = 'gold4'
+        self.create_line(0, 0, self.winfo_width(), self.winfo_height(), fill=color, width=3)
+        self.create_line(0, self.winfo_height(), self.winfo_width(), 0, fill=color, width=3)
 
 app = WeatherApp()
 app.mainloop()
