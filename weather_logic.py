@@ -5,7 +5,12 @@ import requests
 def get_weather_data(name):
     url = f"http://api.apixu.com/v1/current.json?key=3fad82dbce9a43a8bed183010191904&q={name}"
     r = requests.get(url)
-    return r.json()
+    answer = r.json()
+    if 'error' not in answer:
+        return answer
+    else:
+        raise Exception(answer['error']['message'])
+
 
 
 def console_print_weather(city):
