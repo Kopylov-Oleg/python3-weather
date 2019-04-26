@@ -32,13 +32,22 @@ class WeatherApp(Frame):
         self.Canvas.draw_weather()
 
 class Paint(Canvas):
-    def __init__(self, master=None, *ap, default_city, **an):
+    def __init__(self, master=None, *ap, default_city,**an):
         self.city = StringVar()
         self.city.set(default_city)
         Canvas.__init__(self, master, *ap, **an)
 
     def draw_weather(self):
-        messagebox.showinfo("Вы ввели", get_weather_data(self.city))
+        #messagebox.showinfo("Вы ввели", get_weather_data(self.city))
+        #self.create_line(0, 0, self.winfo_width(), self.winfo_height(), fill='red', width=1)
+        #self.create_line(0, self.winfo_height(), self.winfo_width(), 0, fill='red', width=1)
+        #self.create_text(self.winfo_width() / 2, 3 * self.winfo_height() / 4, text = get_real_temp(self.city))
+        self.draw_temp()
+
+    def draw_temp(self):
+        temp = str(get_real_temp(self.city)) + "°C"
+        self.create_text(self.winfo_width() / 2, 3 * self.winfo_height() / 4, text = temp)
+        
 
 app = WeatherApp()
 app.mainloop()
