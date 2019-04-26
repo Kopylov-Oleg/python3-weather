@@ -12,6 +12,7 @@ class WeatherApp(Frame):
         self.new_city = StringVar()
         self.create()
         self.adjust()
+        self.bind('<Configure>', self.configure)
 
     def create(self):
         self.Canvas = Paint(self, default_city="moscow")
@@ -31,6 +32,10 @@ class WeatherApp(Frame):
         self.Canvas.city.set(self.new_city.get())
         self.Canvas.draw_weather()
 
+    def configure(self, event):
+        if (self.new_city.get() != ""):
+            self.Canvas.draw_weather()
+
 class Paint(Canvas):
     def __init__(self, master=None, *ap, default_city,**an):
         self.city = StringVar()
@@ -42,41 +47,75 @@ class Paint(Canvas):
         #messagebox.showinfo("Вы ввели", get_weather_data(self.city))
         self.draw_weather_picture()
         self.draw_city()
+        self.draw_time()
+        self.draw_conditions()
         self.draw_temp()
-        self.draw_conditions()        
 
     def draw_city(self):
-        self.create_text(50, 50, text = self.city.get())
+        self.create_text(self.winfo_width() / 4, self.winfo_height() / 5, text = self.city.get())
 
-    def draw_temp(self):
-        temp = str(get_real_temp(self.city.get())) + "°C"
-        self.create_text(self.winfo_width() / 2, 3 * self.winfo_height() / 4, text = temp)
+    def draw_time(self):
+        time = "00:00"
+        self.create_text(3 * self.winfo_width() / 4, self.winfo_height() / 5, text = time)
 
     def draw_conditions(self):
         conditions = str(get_conditions(self.city.get()))
-        self.create_text(self.winfo_width() / 2, 4 * self.winfo_height() / 5, text = conditions)
+        self.create_text(self.winfo_width() / 4, 4 * self.winfo_height() / 5, text = conditions)
+
+    def draw_temp(self):
+        temp = str(get_real_temp(self.city.get())) + "°C"
+        self.create_text(3 * self.winfo_width() / 4, 4 * self.winfo_height() / 5, text = temp)    
 
     def draw_weather_picture(self):
         conditions = str(get_conditions(self.city.get()))
-        color = 'black'
         if (conditions == "Sunny"):
-            color = 'yellow'
+            self.draw_sunny()
         elif (conditions == "Partly cloudy"):
-            color = 'grey'
+            self.draw_partly_cloudly()
         elif (conditions == "Mist"):
-            color = 'white'
+            self.draw_mist()
         elif (conditions == "Light rain"):
-            color = 'light blue'
+            self.draw_light_rain()
         elif (conditions == "Overcast"):
-            color = 'bisque2'
+            self.draw_overcast()
         elif (conditions == "Clear"):
-            color = 'lightcyan2'
+            self.draw_clear()
         elif (conditions == "Patchy light rain with thunder"):
-            color = 'gold3'
+            self.draw_patchy_light_rain_with_thunder()
         elif (conditions == "Moderate or heavy rain with thunder"):
-            color = 'gold4'
-        self.create_line(0, 0, self.winfo_width(), self.winfo_height(), fill=color, width=3)
-        self.create_line(0, self.winfo_height(), self.winfo_width(), 0, fill=color, width=3)
+            self.draw_moderate_or_heavy_rain_with_thunder()
+
+    def draw_sunny(self):
+        color = 'yellow'
+        self.create_oval(self.winfo_width()/4, self.winfo_height()/4, 3*self.winfo_width()/4, 3*self.winfo_height()/4, fill=color, width=3)
+
+    def draw_partly_cloudly(self):
+        color = 'grey'
+        self.create_oval(self.winfo_width()/4, self.winfo_height()/4, 3*self.winfo_width()/4, 3*self.winfo_height()/4, fill=color, width=3)
+
+    def draw_mist(self):
+        color = 'white'
+        self.create_oval(self.winfo_width()/4, self.winfo_height()/4, 3*self.winfo_width()/4, 3*self.winfo_height()/4, fill=color, width=3)
+
+    def draw_light_rain(self):
+        color = 'light blue'
+        self.create_oval(self.winfo_width()/4, self.winfo_height()/4, 3*self.winfo_width()/4, 3*self.winfo_height()/4, fill=color, width=3)
+
+    def draw_overcast(self):
+        color = 'bisque2'
+        self.create_oval(self.winfo_width()/4, self.winfo_height()/4, 3*self.winfo_width()/4, 3*self.winfo_height()/4, fill=color, width=3)
+
+    def draw_clear(self):
+        color = 'lightcyan2'
+        self.create_oval(self.winfo_width()/4, self.winfo_height()/4, 3*self.winfo_width()/4, 3*self.winfo_height()/4, fill=color, width=3)
+
+    def draw_patchy_light_rain_with_thunder(self):
+        color = 'gold3'
+        self.create_oval(self.winfo_width()/4, self.winfo_height()/4, 3*self.winfo_width()/4, 3*self.winfo_height()/4, fill=color, width=3)
+
+    def draw_moderate_or_heavy_rain_with_thunder(self):
+        color = 'gold4'
+        self.create_oval(self.winfo_width()/4, self.winfo_height()/4, 3*self.winfo_width()/4, 3*self.winfo_height()/4, fill=color, width=3)
 
 app = WeatherApp()
 app.mainloop()
