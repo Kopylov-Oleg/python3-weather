@@ -77,43 +77,35 @@ class Paint(Canvas):
 
     def draw_sunny(self):
         color = 'yellow'
-        self.create_line(0, 0, self.winfo_width(), self.winfo_height(), fill=color, width=3)
-        self.create_line(0, self.winfo_height(), self.winfo_width(), 0, fill=color, width=3)
+        self.create_oval(self.winfo_width()/4, self.winfo_height()/4, 3*self.winfo_width()/4, 3*self.winfo_height()/4, fill=color, width=3)
 
     def draw_partly_cloudly(self):
         color = 'grey'
-        self.create_line(0, 0, self.winfo_width(), self.winfo_height(), fill=color, width=3)
-        self.create_line(0, self.winfo_height(), self.winfo_width(), 0, fill=color, width=3)
+        self.create_oval(self.winfo_width()/4, self.winfo_height()/4, 3*self.winfo_width()/4, 3*self.winfo_height()/4, fill=color, width=3)
 
     def draw_mist(self):
         color = 'white'
-        self.create_line(0, 0, self.winfo_width(), self.winfo_height(), fill=color, width=3)
-        self.create_line(0, self.winfo_height(), self.winfo_width(), 0, fill=color, width=3)
+        self.create_oval(self.winfo_width()/4, self.winfo_height()/4, 3*self.winfo_width()/4, 3*self.winfo_height()/4, fill=color, width=3)
 
     def draw_light_rain(self):
         color = 'light blue'
-        self.create_line(0, 0, self.winfo_width(), self.winfo_height(), fill=color, width=3)
-        self.create_line(0, self.winfo_height(), self.winfo_width(), 0, fill=color, width=3)
+        self.create_oval(self.winfo_width()/4, self.winfo_height()/4, 3*self.winfo_width()/4, 3*self.winfo_height()/4, fill=color, width=3)
 
     def draw_overcast(self):
         color = 'bisque2'
-        self.create_line(0, 0, self.winfo_width(), self.winfo_height(), fill=color, width=3)
-        self.create_line(0, self.winfo_height(), self.winfo_width(), 0, fill=color, width=3)
+        self.create_oval(self.winfo_width()/4, self.winfo_height()/4, 3*self.winfo_width()/4, 3*self.winfo_height()/4, fill=color, width=3)
 
     def draw_clear(self):
         color = 'lightcyan2'
-        self.create_line(0, 0, self.winfo_width(), self.winfo_height(), fill=color, width=3)
-        self.create_line(0, self.winfo_height(), self.winfo_width(), 0, fill=color, width=3)
+        self.create_oval(self.winfo_width()/4, self.winfo_height()/4, 3*self.winfo_width()/4, 3*self.winfo_height()/4, fill=color, width=3)
 
     def draw_patchy_light_rain_with_thunder(self):
         color = 'gold3'
-        self.create_line(0, 0, self.winfo_width(), self.winfo_height(), fill=color, width=3)
-        self.create_line(0, self.winfo_height(), self.winfo_width(), 0, fill=color, width=3)
+        self.create_oval(self.winfo_width()/4, self.winfo_height()/4, 3*self.winfo_width()/4, 3*self.winfo_height()/4, fill=color, width=3)
 
     def draw_moderate_or_heavy_rain_with_thunder(self):
         color = 'gold4'
-        self.create_line(0, 0, self.winfo_width(), self.winfo_height(), fill=color, width=3)
-        self.create_line(0, self.winfo_height(), self.winfo_width(), 0, fill=color, width=3)
+        self.create_oval(self.winfo_width()/4, self.winfo_height()/4, 3*self.winfo_width()/4, 3*self.winfo_height()/4, fill=color, width=3)
 
 app = WeatherApp()
 app.mainloop()
