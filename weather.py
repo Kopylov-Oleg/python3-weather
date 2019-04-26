@@ -42,19 +42,19 @@ class Paint(Canvas):
         #messagebox.showinfo("Вы ввели", get_weather_data(self.city))
         self.draw_weather_picture()
         self.draw_city()
+        self.draw_conditions()
         self.draw_temp()
-        self.draw_conditions()        
 
     def draw_city(self):
         self.create_text(50, 50, text = self.city.get())
 
-    def draw_temp(self):
-        temp = str(get_real_temp(self.city.get())) + "°C"
-        self.create_text(self.winfo_width() / 2, 3 * self.winfo_height() / 4, text = temp)
-
     def draw_conditions(self):
         conditions = str(get_conditions(self.city.get()))
-        self.create_text(self.winfo_width() / 2, 4 * self.winfo_height() / 5, text = conditions)
+        self.create_text(self.winfo_width() / 4, 4 * self.winfo_height() / 5, text = conditions)
+
+    def draw_temp(self):
+        temp = str(get_real_temp(self.city.get())) + "°C"
+        self.create_text(3 * self.winfo_width() / 4, 4 * self.winfo_height() / 5, text = temp)    
 
     def draw_weather_picture(self):
         conditions = str(get_conditions(self.city.get()))
