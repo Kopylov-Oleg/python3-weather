@@ -6,6 +6,9 @@
 > [Копылов Олег 424](https://github.com/Kopylov-Oleg)
 
 > [Васьков Александр 424](https://github.com/AVasK)
+### Project roadmap:
+![alt text](https://raw.githubusercontent.com/AVasK/python3-weather/master/plan.jpg)
+
 ### Схема GUI интерфейса:
 ![alt text](https://pp.userapi.com/c854128/v854128419/26f3e/N55nEweiqCY.jpg)
 
