@@ -1,23 +1,122 @@
-import requests
+from tkinter import *
+from tkinter import messagebox
+from weather_logic import *
 
-# https://www.apixu.com/api-explorer.aspx?key=3fad82dbce9a43a8bed183010191904
+class WeatherApp(Frame):
+    def __init__(self, master=None):
+        Frame.__init__(self, master)
+        self.master.rowconfigure(0, weight=1)
+        self.master.columnconfigure(0, weight=1)
+        self.master.title("Weather Application")
+        self.grid(sticky=N+E+S+W)
+        self.new_city = StringVar()
+        self.create()
+        self.adjust()
+        self.bind('<Configure>', self.configure)
 
-def get_weather_data(name):
-    url = f"http://api.apixu.com/v1/current.json?key=3fad82dbce9a43a8bed183010191904&q={name}"
-    r = requests.get(url)
-    return r.json()
+    def create(self):
+        self.Canvas = Paint(self, default_city="moscow")
+        self.Canvas.grid(row=0, column=0, rowspan=9, columnspan=5, sticky=N+E+S+W)
+        self.CityEntry = Entry(self, textvariable=self.new_city)
+        self.CityEntry.grid(row=10, column=1, sticky=N+E+S+W)
+        self.ShowWeather = Button(self, text="Узнать погоду", command=self.show_weather)
+        self.ShowWeather.grid(row=10, column=3, sticky=N+E+S+W)
 
+    def adjust(self):
+        for i in range(5):
+            self.columnconfigure(i, weight=1, minsize = 30)
+        for i in range(12):
+            self.rowconfigure(i, weight=1, minsize = 30)
 
-def console_print_weather(city):
-    d = get_weather_data(city)
-    real_temp = d['current']['temp_c']
-    feels_like = d['current']['feelslike_c']
-    conditions = d['current']['condition']['text']
-    day_night = ['ночь', 'день'][d['current']['is_day']]
-    wind_speed = d['current']['wind_kph']
-    visibility = d['current']['vis_km']
-    
-    text = f"Погода в {city}:\nТемпература воздуха: {real_temp}˚C\nОщущается как: {feels_like}\n" + \
-           f"Погодные условия: {conditions}\nВремя суток: {day_night}\nВетер: {wind_speed} км/ч\nВидимость: {visibility}км\n"
-        
-    print(text)
+    def show_weather(self):        
+        self.Canvas.city.set(self.new_city.get())
+        self.Canvas.draw_weather()
+
+    def configure(self, event):
+        if (self.new_city.get() != ""):
+            self.Canvas.draw_weather()
+
+class Paint(Canvas):
+    def __init__(self, master=None, *ap, default_city,**an):
+        self.city = StringVar()
+        self.city.set(default_city)
+        Canvas.__init__(self, master, *ap, **an)
+
+    def draw_weather(self):
+        self.delete("all")
+        #messagebox.showinfo("Вы ввели", get_weather_data(self.city))
+        self.draw_weather_picture()
+        self.draw_city()
+        self.draw_time()
+        self.draw_conditions()
+        self.draw_temp()
+
+    def draw_city(self):
+        self.create_text(self.winfo_width() / 4, self.winfo_height() / 5, text = self.city.get())
+
+    def draw_time(self):
+        time = "00:00"
+        self.create_text(3 * self.winfo_width() / 4, self.winfo_height() / 5, text = time)
+
+    def draw_conditions(self):
+        conditions = str(get_conditions(self.city.get()))
+        self.create_text(self.winfo_width() / 4, 4 * self.winfo_height() / 5, text = conditions)
+
+    def draw_temp(self):
+        temp = str(get_real_temp(self.city.get())) + "°C"
+        self.create_text(3 * self.winfo_width() / 4, 4 * self.winfo_height() / 5, text = temp)    
+
+    def draw_weather_picture(self):
+        conditions = str(get_conditions(self.city.get()))
+        if (conditions == "Sunny"):
+            self.draw_sunny()
+        elif (conditions == "Partly cloudy"):
+            self.draw_partly_cloudly()
+        elif (conditions == "Mist"):
+            self.draw_mist()
+        elif (conditions == "Light rain"):
+            self.draw_light_rain()
+        elif (conditions == "Overcast"):
+            self.draw_overcast()
+        elif (conditions == "Clear"):
+            self.draw_clear()
+        elif (conditions == "Patchy light rain with thunder"):
+            self.draw_patchy_light_rain_with_thunder()
+        elif (conditions == "Moderate or heavy rain with thunder"):
+            self.draw_moderate_or_heavy_rain_with_thunder()
+
+    def draw_sunny(self):
+        color = 'yellow'
+        self.create_oval(self.winfo_width()/4, self.winfo_height()/4, 3*self.winfo_width()/4, 3*self.winfo_height()/4, fill=color, width=3)
+
+    def draw_partly_cloudly(self):
+        color = 'grey'
+        self.create_oval(self.winfo_width()/4, self.winfo_height()/4, 3*self.winfo_width()/4, 3*self.winfo_height()/4, fill=color, width=3)
+
+    def draw_mist(self):
+        color = 'white'
+        self.create_oval(self.winfo_width()/4, self.winfo_height()/4, 3*self.winfo_width()/4, 3*self.winfo_height()/4, fill=color, width=3)
+
+    def draw_light_rain(self):
+        color = 'light blue'
+        self.create_oval(self.winfo_width()/4, self.winfo_height()/4, 3*self.winfo_width()/4, 3*self.winfo_height()/4, fill=color, width=3)
+
+    def draw_overcast(self):
+        color = 'bisque2'
+        self.create_oval(self.winfo_width()/4, self.winfo_height()/4, 3*self.winfo_width()/4, 3*self.winfo_height()/4, fill=color, width=3)
+
+    def draw_clear(self):
+        color = 'lightcyan2'
+        self.create_oval(self.winfo_width()/4, self.winfo_height()/4, 3*self.winfo_width()/4, 3*self.winfo_height()/4, fill=color, width=3)
+
+    def draw_patchy_light_rain_with_thunder(self):
+        color = 'gold3'
+        self.create_oval(self.winfo_width()/4, self.winfo_height()/4, 3*self.winfo_width()/4, 3*self.winfo_height()/4, fill=color, width=3)
+
+    def draw_moderate_or_heavy_rain_with_thunder(self):
+        color = 'gold4'
+        self.create_oval(self.winfo_width()/4, self.winfo_height()/4, 3*self.winfo_width()/4, 3*self.winfo_height()/4, fill=color, width=3)
+
+app = WeatherApp()
+app.mainloop()
+
