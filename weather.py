@@ -33,7 +33,8 @@ class WeatherApp(Frame):
         self.Canvas.draw_weather()
 
     def configure(self, event):
-        self.Canvas.draw_weather()
+        if (self.new_city.get() != ""):
+            self.Canvas.draw_weather()
 
 class Paint(Canvas):
     def __init__(self, master=None, *ap, default_city,**an):
