@@ -18,7 +18,7 @@ class WeatherApp(Frame):
         self.Canvas.grid(row=0, column=0, rowspan=9, columnspan=5, sticky=N+E+S+W)
         self.CityEntry = Entry(self, textvariable=self.new_city)
         self.CityEntry.grid(row=10, column=1, sticky=N+E+S+W)
-        self.ShowWeather = Button(self, text="Show weather", command=self.show_weather)
+        self.ShowWeather = Button(self, text="Узнать погоду", command=self.show_weather)
         self.ShowWeather.grid(row=10, column=3, sticky=N+E+S+W)
 
     def adjust(self):
