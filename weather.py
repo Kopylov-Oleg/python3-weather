@@ -12,6 +12,7 @@ class WeatherApp(Frame):
         self.new_city = StringVar()
         self.create()
         self.adjust()
+        self.bind('<Configure>', self.configure)
 
     def create(self):
         self.Canvas = Paint(self, default_city="moscow")
@@ -29,6 +30,9 @@ class WeatherApp(Frame):
 
     def show_weather(self):        
         self.Canvas.city.set(self.new_city.get())
+        self.Canvas.draw_weather()
+
+    def configure(self, event):
         self.Canvas.draw_weather()
 
 class Paint(Canvas):
