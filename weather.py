@@ -58,23 +58,60 @@ class Paint(Canvas):
 
     def draw_weather_picture(self):
         conditions = str(get_conditions(self.city.get()))
-        color = 'black'
         if (conditions == "Sunny"):
-            color = 'yellow'
+            self.draw_sunny()
         elif (conditions == "Partly cloudy"):
-            color = 'grey'
+            self.draw_partly_cloudly()
         elif (conditions == "Mist"):
-            color = 'white'
+            self.draw_mist()
         elif (conditions == "Light rain"):
-            color = 'light blue'
+            self.draw_light_rain()
         elif (conditions == "Overcast"):
-            color = 'bisque2'
+            self.draw_overcast()
         elif (conditions == "Clear"):
-            color = 'lightcyan2'
+            self.draw_clear()
         elif (conditions == "Patchy light rain with thunder"):
-            color = 'gold3'
+            self.draw_patchy_light_rain_with_thunder()
         elif (conditions == "Moderate or heavy rain with thunder"):
-            color = 'gold4'
+            self.draw_moderate_or_heavy_rain_with_thunder()
+
+    def draw_sunny(self):
+        color = 'yellow'
+        self.create_line(0, 0, self.winfo_width(), self.winfo_height(), fill=color, width=3)
+        self.create_line(0, self.winfo_height(), self.winfo_width(), 0, fill=color, width=3)
+
+    def draw_partly_cloudly(self):
+        color = 'grey'
+        self.create_line(0, 0, self.winfo_width(), self.winfo_height(), fill=color, width=3)
+        self.create_line(0, self.winfo_height(), self.winfo_width(), 0, fill=color, width=3)
+
+    def draw_mist(self):
+        color = 'white'
+        self.create_line(0, 0, self.winfo_width(), self.winfo_height(), fill=color, width=3)
+        self.create_line(0, self.winfo_height(), self.winfo_width(), 0, fill=color, width=3)
+
+    def draw_light_rain(self):
+        color = 'light blue'
+        self.create_line(0, 0, self.winfo_width(), self.winfo_height(), fill=color, width=3)
+        self.create_line(0, self.winfo_height(), self.winfo_width(), 0, fill=color, width=3)
+
+    def draw_overcast(self):
+        color = 'bisque2'
+        self.create_line(0, 0, self.winfo_width(), self.winfo_height(), fill=color, width=3)
+        self.create_line(0, self.winfo_height(), self.winfo_width(), 0, fill=color, width=3)
+
+    def draw_clear(self):
+        color = 'lightcyan2'
+        self.create_line(0, 0, self.winfo_width(), self.winfo_height(), fill=color, width=3)
+        self.create_line(0, self.winfo_height(), self.winfo_width(), 0, fill=color, width=3)
+
+    def draw_patchy_light_rain_with_thunder(self):
+        color = 'gold3'
+        self.create_line(0, 0, self.winfo_width(), self.winfo_height(), fill=color, width=3)
+        self.create_line(0, self.winfo_height(), self.winfo_width(), 0, fill=color, width=3)
+
+    def draw_moderate_or_heavy_rain_with_thunder(self):
+        color = 'gold4'
         self.create_line(0, 0, self.winfo_width(), self.winfo_height(), fill=color, width=3)
         self.create_line(0, self.winfo_height(), self.winfo_width(), 0, fill=color, width=3)
 
