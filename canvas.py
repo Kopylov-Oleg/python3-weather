@@ -5,9 +5,10 @@ import math
 
 from weather_logic import get_weather_data
 
-root = Tk()
-root.columnconfigure(0, weight=1)
-root.rowconfigure(0, weight=1)
+if __name__ == '__main__':
+    root = Tk()
+    root.columnconfigure(0, weight=1)
+    root.rowconfigure(0, weight=1)
 
 class Color():
     def __init__(self, rgb):
@@ -266,21 +267,16 @@ def gui(canvas, weather_data):
         draw_sun(canvas, 10, sun_moon_h, 300)
 
 
+if __name__ == '__main__':
 
+    canvas = Canvas(root)
+    canvas.grid(column=0, row=0, sticky=(N, W, E, S))
 
+    #H, W = root.winfo_height(), root.winfo_width()
+    #print(H, W)
+    H, W = 1280, 720
+    draw_grad(canvas, (0, 0, 10), (247, 247, 240), H, W)
 
-
-
-
-
-canvas = Canvas(root)
-canvas.grid(column=0, row=0, sticky=(N, W, E, S))
-
-#H, W = root.winfo_height(), root.winfo_width()
-#print(H, W)
-H, W = 1280, 720
-draw_grad(canvas, (0, 0, 10), (247, 247, 240), H, W)
-
-#canvas.bind('<Motion>', _)
-canvas.bind('<1>', lambda e : gui(canvas, get_weather_data('tokyo')))#lambda e : draw_grad(Color.random(), Color.random(), H, W))
-root.mainloop()
+    #canvas.bind('<Motion>', _)
+    canvas.bind('<1>', lambda e : gui(canvas, get_weather_data('tokyo')))#lambda e : draw_grad(Color.random(), Color.random(), H, W))
+    root.mainloop()
