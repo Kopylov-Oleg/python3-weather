@@ -1,10 +1,14 @@
 from tkinter import *
 from tkinter import ttk
 import random
+import math
 
-root = Tk()
-root.columnconfigure(0, weight=1)
-root.rowconfigure(0, weight=1)
+from weather_logic import get_weather_data
+
+if __name__ == '__main__':
+    root = Tk()
+    root.columnconfigure(0, weight=1)
+    root.rowconfigure(0, weight=1)
 
 class Color():
     def __init__(self, rgb):
@@ -42,7 +46,7 @@ class Color():
         return Color(map(lambda x : int(x * k), self.rgb))
 
     def __floordiv__(self, k):
-        return Color(map(lambda x : x // k, self.rgb))
+        return Color(map(lambda x : int(x // k), self.rgb))
 
     def __truediv__(self, k):
         return Color(map(lambda x : x / k, self.rgb))
@@ -58,7 +62,7 @@ def rgb_to_hex(rgb):
     return rgb.to_hex()
 
 
-def draw_grad(start_color, end_color, H=200, W=400, step_size=20):
+def draw_grad(canvas, start_color, end_color, H=200, W=400, step_size=20):
     start_color = Color(start_color)
     end_color = Color(end_color)
     value = start_color
@@ -73,10 +77,8 @@ def draw_grad(start_color, end_color, H=200, W=400, step_size=20):
 
         value += inc
 
-    #draw_moon(100, 100, 300)
 
-
-def draw_grad_circle(pos_x, pos_y, diameter, color_1, color_2, step_size, percent = 30):
+def draw_grad_circle(canvas, pos_x, pos_y, diameter, color_1, color_2, step_size, percent = 30):
 
     range_ = int(diameter/2 / 100 * percent)
     inc = (color_1 - color_2) / (range_//step_size)
@@ -88,13 +90,13 @@ def draw_grad_circle(pos_x, pos_y, diameter, color_1, color_2, step_size, percen
         clr += inc
         clr = clr.clamp()
 
-def draw_sun(pos_x, pos_y, diameter, step_size=4):
+def draw_sun(canvas, pos_x, pos_y, diameter, step_size=4):
     sun_color_1 = Color([255, 194, 29])
     sun_color_2 = Color([255, 236, 98])
 
-    draw_grad_circle(pos_x, pos_y, diameter, sun_color_1, sun_color_2, step_size)
+    draw_grad_circle(canvas, pos_x, pos_y, diameter, sun_color_1, sun_color_2, step_size)
 
-def draw_moon(pos_x, pos_y, diameter, step_size=4):
+def draw_moon(canvas, pos_x, pos_y, diameter, step_size=4):
     moon_color_1 = Color([214, 216, 211])
     moon_color_2 = Color([134, 155, 155])//2
 
@@ -105,68 +107,176 @@ def draw_moon(pos_x, pos_y, diameter, step_size=4):
 
     d = diameter//150
 
-    draw_grad_circle(pos_x, pos_y, diameter, moon_color_1, moon_color_2, step_size, percent=120)
-    draw_grad_circle(pos_x+diameter//2, pos_y+diameter//2, diameter//5, crater_color_1, crater_color_2, step_size=2, percent = 100)
-    draw_grad_circle(pos_x+diameter//2-30*d, pos_y+diameter//2+20*d, diameter//10, crater_color_1, crater_color_2/4, step_size=2, percent = 100)
-    draw_grad_circle(pos_x+diameter//2 - 30*d, pos_y+diameter//2 - 40*d, diameter//7, crater_color_1, crater_color_2, step_size=2, percent = 100)
+    draw_grad_circle(canvas, pos_x, pos_y, diameter, moon_color_1, moon_color_2, step_size, percent=120)
+    draw_grad_circle(canvas, pos_x+diameter//2, pos_y+diameter//2, diameter//5, crater_color_1, crater_color_2, step_size=2, percent = 100)
+    draw_grad_circle(canvas, pos_x+diameter//2-30*d, pos_y+diameter//2+20*d, diameter//10, crater_color_1, crater_color_2/4, step_size=2, percent = 100)
+    draw_grad_circle(canvas, pos_x+diameter//2 - 30*d, pos_y+diameter//2 - 40*d, diameter//7, crater_color_1, crater_color_2, step_size=2, percent = 100)
 
 
-def draw_dark_sphere(pos_x, pos_y, diameter, step_size=2):
+def draw_dark_sphere(canvas, pos_x, pos_y, diameter, step_size=2):
     moon_color_2 = Color([214, 216, 211])
     moon_color_1 = Color([134, 155, 155])//2
-    draw_grad_circle(pos_x, pos_y, diameter, moon_color_1, moon_color_2, step_size, percent=120)
+    draw_grad_circle(canvas, pos_x, pos_y, diameter, moon_color_1, moon_color_2, step_size, percent=120)
 
 
-def draw_clouds(e):
+def draw_clouds(canvas):
     offset = 20
-    beautiful_appearance(e)
     canvas.create_oval(10 + e.x, 10 + e.y, 500 + e.x, 250 + e.y, fill="#ffffff", outline='')
-    canvas.create_oval(10 + e.x + 30, 10 + e.y + 10, 500 + e.x + 50, 250 + e.y - 10, fill="#eeeeee", outline='')
+    canvas.create_oval(10 + e.x + 30, 10 + e.y + 10, 500 + e.x + 50, 250 + e.y - 10, fill=Color([250,250,255]).to_hex(), outline='')
 
 
-def cool_text_fx(text, sun_pos, sun_diam, text_pos):
+def draw_circ_lines(canvas, inner_diameter, center_x, center_y, start, stop, thickness=88):
+    diameter = inner_diameter
+    radius = diameter // 2
+    x_center, y_center = center_x + diameter//2, center_y + diameter//2
+    for a in range(start, stop, 1):
+        x = x_center + radius * math.cos(math.radians(a))
+        y = y_center + radius * math.sin(math.radians(a))
+        x1 = x_center + radius * math.cos(math.radians(a + thickness))
+        y1 = y_center + radius * math.sin(math.radians(a + thickness))
+
+        canvas.create_line(x, y, x1, y1, fill="white", width=1)
+
+
+def cool_text_fx(canvas, text, sun_pos, sun_diam, text_pos, *, text_size=50, text_font='impact', line_color='white', text_color='white', line_width=2):
     pos_x, pos_y = sun_pos
     added = 20
     diameter = sun_diam + added
-    canvas.create_oval(pos_x - added, pos_y - added, pos_x + diameter, pos_y + diameter, fill="#ffffff", outline='')
+    #canvas.create_oval(pos_x - added, pos_y - added, pos_x + diameter, pos_y + diameter, fill="#ffffff", outline='')
+
 
     text_pos_x, text_pos_y = text_pos
-    canvas.create_line(pos_x + diameter//2, pos_y + diameter//2, text_pos_x, text_pos_y, fill="#ffffff", width=5)
+    canvas.create_line(pos_x + diameter//2, pos_y + diameter//2, text_pos_x, text_pos_y, fill=line_color, width=line_width)
 
-    canvas.create_text(text_pos_x, text_pos_y, anchor='w', font=('impact', 50), text=text, fill='#ffffff')
+    canvas.create_text(text_pos_x, text_pos_y, anchor='w', font=(text_font, text_size), text=text, fill=text_color)
 
 
-def beautiful_appearance(e):
-    screen_center_x = 200
-    screen_center_y = 500
+def parse_time(str_time):
+    _h, _m = str_time.split(':')
 
-    color_1 = Color([103, 160, 205])
-    color_2 = Color([249, 255, 237])
-    draw_grad(color_1, color_2, 1280, 720)
+    h, m = int(_h), int(_m)
+    return h, m
 
-    cool_text_fx('Sunny!', (10, 10), 300, (220 + 300 + (1000/(screen_center_x - e.x)), 300//2 + (1000/(screen_center_y - e.y))))
 
-    cool_text_fx('+30 C', (10, 10), 300, (220 + 250 + (1000/(screen_center_x - e.x)), 300 + (1000/(screen_center_y - e.y))))
+def elevation(h):
+    if 6 <= h <= 23:
+        return 1 - ((h - 12) / 12)
+    else:
+        return 1 - ((h - 4) / 4)
+
+
+def night(time):
+    return 6 <= parse_time(time)[0] <= 23
+
+def draw_sky(canvas, conditions, day_night, area_size = (1280, 720), step_size = 8):
+    W, H = area_size
+
+    colors = {
+    'Sunny' : [
+        Color([184, 216, 255]),
+        Color([148, 188, 237])
+    ],
+
+    'Partly cloudy' : [
+        Color([167, 153, 200]),
+        Color([148, 188, 237])
+    ],
+
+    'Mist' : [
+        Color([185, 204, 194]),
+        Color([149, 168, 191])
+    ],
+
+    'Light rain' : [
+        Color([180, 145, 209]),
+        Color([185, 180, 210])
+    ],
+
+    'Overcast' : [
+        Color([180, 145, 150]),
+        Color([185, 180, 190])
+    ],
+
+    'Clear' : [
+        Color([169, 153, 201]),
+        Color([148, 188, 237])
+    ],
+
+    "Patchy light rain with thunder" : [
+        Color([89, 88, 177]),
+        Color([53, 62, 63])
+    ],
+
+    'Moderate rain' : [
+        Color([89, 88, 177]),
+        Color([53, 62, 63])
+    ],
+
+    "Moderate or heavy rain with thunder" : [
+        Color([114, 71, 144]),
+        Color([54, 66, 76])
+    ],
+
+    'night' : [
+        Color([58, 124, 137]),
+        Color([24, 63, 104])
+    ]
+    }
+
+    if day_night == 'день':
+        color_1, color_2 = colors[conditions]
+    else:
+        color_1, color_2 = colors['night']
+
+    draw_grad(canvas, color_1, color_2, W, H, step_size=step_size)
+
+
+def gui(canvas, weather_data):
+
+    d = weather_data
+    city_name = d['location']['name']
+    country = d['location']['country']
+    temp = d['current']['temp_c']
+    feels_like = d['current']['feelslike_c']
+    conditions = d['current']['condition']['text']
+    day_night = ['ночь', 'день'][d['current']['is_day']]
+    wind_speed = d['current']['wind_kph']
+    visibility = d['current']['vis_km']
+    time = d['location']['localtime'].split()[1]
+
+    h, m = parse_time(time)
+    sun_moon_h = 350 * elevation(h)
+
+    draw_sky(canvas, conditions, day_night) # Drawing background
+
+    cool_text_fx(canvas, f'Погода в {city_name} : {country}', (10, sun_moon_h), 300, (220 + 300, 300//2))
+    cool_text_fx(canvas, f'{conditions}', (10, sun_moon_h), 300, (220 + 300, 300//2 + 100), text_size = 25)
+    cool_text_fx(canvas, f'Температура: {temp}˚C / Ощущается как: {feels_like} ˚C', (10, sun_moon_h), 300, (220 + 300, 300//2 + 200), text_size = 25, text_color = 'white')
+    cool_text_fx(canvas, f'Местное время: {time}', (10, sun_moon_h), 300, (220 + 300, 300//2 + 300), text_size = 20)
+    cool_text_fx(canvas, f'Скорость ветра: {wind_speed} km/h', (10, sun_moon_h), 300, (220 + 300, 300//2 + 400), text_size = 20)
+
+    #cool_text_fx('+30 C', (10, 10), 300, (220 + 250 + (1000/(screen_center_x - e.x)), 300 + (1000/(screen_center_y - e.y))))
     #sun_diam_range = list(range(100, 350, 20)) + list(range(350, 300, -20))
     #for d in sun_diam_range:
         #draw_sun(10, 10, d)
+    if conditions in ["Partly cloudy", "Mist"]:
+        draw_circ_lines(canvas, 330, 10, sun_moon_h, -70, 70, thickness = 88)
+    if day_night == 'ночь':
+        draw_moon(canvas, 10, sun_moon_h, 300)
+    else:
+        draw_sun(canvas, 10, sun_moon_h, 300)
 
-    draw_sun(10, 10, 300)
 
+if __name__ == '__main__':
 
+    canvas = Canvas(root)
+    canvas.grid(column=0, row=0, sticky=(N, W, E, S))
 
+    #H, W = root.winfo_height(), root.winfo_width()
+    #print(H, W)
+    H, W = 1280, 720
+    draw_grad(canvas, (0, 0, 10), (247, 247, 240), H, W)
 
-
-
-
-canvas = Canvas(root)
-canvas.grid(column=0, row=0, sticky=(N, W, E, S))
-
-#H, W = root.winfo_height(), root.winfo_width()
-#print(H, W)
-H, W = 1280, 720
-draw_grad((0, 0, 10), (247, 247, 240), H, W)
-
-canvas.bind('<Motion>', draw_clouds)
-canvas.bind('<1>', beautiful_appearance)#lambda e : draw_grad(Color.random(), Color.random(), H, W))
-root.mainloop()
+    #canvas.bind('<Motion>', _)
+    canvas.bind('<1>', lambda e : gui(canvas, get_weather_data('tokyo')))#lambda e : draw_grad(Color.random(), Color.random(), H, W))
+    root.mainloop()

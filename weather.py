@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import messagebox
 from weather_logic import *
+from canvas import gui
 
 class WeatherApp(Frame):
     def __init__(self, master=None):
@@ -28,7 +29,7 @@ class WeatherApp(Frame):
         for i in range(12):
             self.rowconfigure(i, weight=1, minsize = 30)
 
-    def show_weather(self):        
+    def show_weather(self):
         self.Canvas.city.set(self.new_city.get())
         self.Canvas.draw_weather()
 
@@ -44,12 +45,7 @@ class Paint(Canvas):
 
     def draw_weather(self):
         self.delete("all")
-        #messagebox.showinfo("Вы ввели", get_weather_data(self.city))
-        self.draw_weather_picture()
-        self.draw_city()
-        self.draw_time()
-        self.draw_conditions()
-        self.draw_temp()
+        gui(self, get_weather_data(self.city.get()))
 
     def draw_city(self):
         self.create_text(self.winfo_width() / 4, self.winfo_height() / 5, text = self.city.get())
@@ -64,7 +60,7 @@ class Paint(Canvas):
 
     def draw_temp(self):
         temp = str(get_real_temp(self.city.get())) + "°C"
-        self.create_text(3 * self.winfo_width() / 4, 4 * self.winfo_height() / 5, text = temp)    
+        self.create_text(3 * self.winfo_width() / 4, 4 * self.winfo_height() / 5, text = temp)
 
     def draw_weather_picture(self):
         conditions = str(get_conditions(self.city.get()))
@@ -119,4 +115,3 @@ class Paint(Canvas):
 
 app = WeatherApp()
 app.mainloop()
-
