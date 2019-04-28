@@ -48,7 +48,7 @@ class Paint(Canvas):
 
     def draw_weather(self, width, height):
         self.delete("all")
-        messagebox.showinfo("Размер окна:", str(str(width) + " x " + str(height)))
+        #messagebox.showinfo("Размер окна:", str(str(width) + " x " + str(height)))
         gui(self, width, height, self.weather_data)
 
     def draw_city(self):
