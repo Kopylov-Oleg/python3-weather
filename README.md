@@ -9,9 +9,12 @@
 ### Project roadmap:
 ![alt text](https://raw.githubusercontent.com/AVasK/python3-weather/master/plan.jpg)
 - [x] Step 1
-- [ ] Step 2 (*90%* complete)
-- [ ] Step 3
-- [ ] Step 4 (Work In Progress)
+- [x] Step 2 (*90%* complete)
+- [x] Step 3
+- [x] Step 4 (Work In Progress)
+
+### Examples: 
+![alt text](https://raw.githubusercontent.com/AVasK/python3-weather/master/examples.jpg)
 
 ### Схема GUI интерфейса:
 ![alt text](https://pp.userapi.com/c854128/v854128419/26f3e/N55nEweiqCY.jpg)
