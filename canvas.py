@@ -304,12 +304,14 @@ def gui(canvas, W, H, weather_data):
         distance = W // 5
         icon_size = 330
         circ_d = 33
+        ets = 40
 
     elif W <= 900 and H <= 500:
         text_dist = 50
         icon_size = 100
         distance = 80
         circ_d = 10
+        ets = 20
 
     elif W <= 1400 and H <= 700:
         text_dist = 70
@@ -321,13 +323,14 @@ def gui(canvas, W, H, weather_data):
         icon_size = 300
         distance = 220
         circ_d = 30
+        ets = 30
 
     if 'error' in weather_data:
         color_1 = Color([100, 103, 109])
         color_2 = Color([7, 4, 1])
         draw_grad(canvas, color_1, color_2, H, W)
-        cool_text_fx(canvas, 'Город не найден :(', (20, 20), 330, (distance + 330, 330//2))
-        draw_dark_sphere(canvas, 20, 20, 330)
+        cool_text_fx(canvas, 'Город не найден :(', (20, 20), icon_size, (distance + icon_size, icon_size//2), text_size = ets)
+        draw_dark_sphere(canvas, 20, 20, icon_size)
         return
 
 
