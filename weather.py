@@ -12,15 +12,27 @@ class WeatherApp(Frame):
         self.grid(sticky=N+E+S+W)
         self.new_city = StringVar()
         self.create()
-        self.adjust()        
+        #self.adjust()
 
     def create(self):
         self.Canvas = Paint(self, default_city="")
-        self.Canvas.grid(row=0, column=0, rowspan=9, columnspan=5, sticky=N+E+S+W)
+        self.Canvas.grid(row=0, column=0, rowspan=9, columnspan=6, sticky=N+E+S+W)
         self.CityEntry = Entry(self, textvariable=self.new_city)
-        self.CityEntry.grid(row=10, column=1, sticky=N+E+S+W)
+        self.CityEntry.grid(row=10, column=0, columnspan = 3, sticky=N+E+S+W)
         self.ShowWeather = Button(self, text="Узнать погоду", command=self.show_weather)
-        self.ShowWeather.grid(row=10, column=3, sticky=N+E+S+W)
+        self.ShowWeather.grid(row=10, column=4, columnspan = 2, sticky=N+E+S+W)
+
+        self.grid_rowconfigure(0, weight=5, pad=5)
+        self.grid_rowconfigure(10, weight=1)
+
+        self.grid_columnconfigure(3, weight=1)
+        self.grid_columnconfigure(2, weight=1)
+        self.grid_columnconfigure(4, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(5, weight=1)
+
+
+
 
     def adjust(self):
         for i in range(5):
@@ -40,7 +52,7 @@ class Paint(Canvas):
         self.weather_data = ""
         Canvas.__init__(self, master, *ap, **an)
         self.bind('<Configure>', self.configure)
-    
+
     def configure(self, event):
         if (self.city.get() != ""):
             #messagebox.showinfo("Размер окна:", str(str(event.width) + " x " + str(event.height)))

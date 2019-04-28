@@ -62,7 +62,7 @@ def rgb_to_hex(rgb):
     return rgb.to_hex()
 
 
-def draw_grad(canvas, start_color, end_color, H=800, W=1280, step_size=20):
+def draw_grad(canvas, start_color, end_color, W=1280, H=800, step_size=20):
     start_color = Color(start_color)
     end_color = Color(end_color)
     value = start_color
@@ -139,7 +139,7 @@ def draw_circ_lines(canvas, inner_diameter, center_x, center_y, start, stop, thi
         canvas.create_line(x, y, x1, y1, fill="white", width=1)
 
 
-def cool_text_fx(canvas, text, sun_pos, sun_diam, text_pos, *, text_size=50, text_font='impact', line_color='white', text_color='white', line_width=2):
+def cool_text_fx(canvas, text, sun_pos, sun_diam, text_pos, *, text_size=50, text_font='avenir next', line_color='white', text_color='white', line_width=2):
     pos_x, pos_y = sun_pos
     added = 20
     diameter = sun_diam + added
@@ -169,38 +169,38 @@ def elevation(h):
 def night(time):
     return 6 <= parse_time(time)[0] <= 23
 
-def draw_sky(canvas, conditions, day_night, area_size = (1280, 720), step_size = 8):
-    W, H = area_size
+def draw_sky(canvas, conditions, day_night, area_size = (720, 1080), step_size = 8):
+    H, W = area_size
 
     colors = {
     'Sunny' : [
-        Color([184, 216, 255]),
-        Color([148, 188, 237])
+        Color([114, 202, 240]),
+        Color([234, 67, 38])
     ],
 
     'Partly cloudy' : [
-        Color([167, 153, 200]),
-        Color([148, 188, 237])
+        Color([103, 116, 222]),
+        Color([85, 247, 173])
     ],
 
     'Mist' : [
-        Color([185, 204, 194]),
+        Color([185+50, 204+50, 194+50]),
         Color([149, 168, 191])
     ],
 
     'Light rain' : [
-        Color([180, 145, 209]),
-        Color([105, 100, 210])
+        Color([221, 174, 211]),
+        Color([221, 174, 211])
     ],
 
     'Overcast' : [
-        Color([180, 145, 150]),
-        Color([185, 180, 190])
+        Color([113, 2, 116]),
+        Color([181, 57, 62])
     ],
 
     'Clear' : [
-        Color([169, 153, 201]),
-        Color([148, 188, 237])
+        Color([26, 157, 136]),
+        Color([2, 171, 109])
     ],
 
     "Patchy light rain with thunder" : [
@@ -224,20 +224,50 @@ def draw_sky(canvas, conditions, day_night, area_size = (1280, 720), step_size =
     ]
     }
 
-    if day_night == 'день':
+
+    try:
         color_1, color_2 = colors[conditions]
-    else:
-        color_1, color_2 = colors['night']
+    except:
+        color_1 = Color([100, 103, 109])
+        color_2 = Color([7, 4, 1])
+    if day_night == 'ночь':
+        color_n1, color_n2 = colors['night']
+        color_1 = (color_1 + color_n1) // 2
+        color_2 = (color_2 + color_n2) // 2
 
     draw_grad(canvas, color_1, color_2, W, H, step_size=step_size)
 
 
-def gui(canvas, width, height, weather_data):
+def gui(canvas, W, H, weather_data):
+
+    if W >= 1410:
+        text_dist = H // 8
+        distance = W // 5
+        icon_size = 330
+        circ_d = 33
+
+    elif W <= 900 and H <= 500:
+        text_dist = 50
+        icon_size = 100
+        distance = 80
+        circ_d = 10
+
+    elif W <= 1400 and H <= 700:
+        text_dist = 70
+        icon_size = 200
+        distance = 100
+        circ_d = 20
+    else:
+        text_dist = 100
+        icon_size = 300
+        distance = 220
+        circ_d = 30
+
     if 'error' in weather_data:
         color_1 = Color([100, 103, 109])
         color_2 = Color([7, 4, 1])
-        draw_grad(canvas, color_1, color_2, 720, 720)
-        cool_text_fx(canvas, 'Город не найден :(', (20, 20), 330, (220 + 330, 330//2))
+        draw_grad(canvas, color_1, color_2, H, W)
+        cool_text_fx(canvas, 'Город не найден :(', (20, 20), 330, (distance + 330, 330//2))
         draw_dark_sphere(canvas, 20, 20, 330)
         return
 
@@ -257,24 +287,24 @@ def gui(canvas, width, height, weather_data):
     sun_moon_h = 400 - 200 * elevation(h)
     #print(elevation(h))
 
-    draw_sky(canvas, conditions, day_night, step_size = 10) # Drawing background
+    draw_sky(canvas, conditions, day_night, area_size = (H, W), step_size = 10) # Drawing background
 
-    cool_text_fx(canvas, f'Погода в {city_name} : {country}', (10, sun_moon_h), 300, (220 + 300, 300//2))
-    cool_text_fx(canvas, f'{conditions}', (10, sun_moon_h), 300, (220 + 300, 300//2 + 100), text_size = 25)
-    cool_text_fx(canvas, f'Температура: {temp}˚C / Ощущается как: {feels_like} ˚C', (10, sun_moon_h), 300, (220 + 300, 300//2 + 200), text_size = 25, text_color = 'white')
-    cool_text_fx(canvas, f'Местное время: {time}', (10, sun_moon_h), 300, (220 + 300, 300//2 + 300), text_size = 20)
-    cool_text_fx(canvas, f'Скорость ветра: {wind_speed} km/h', (10, sun_moon_h), 300, (220 + 300, 300//2 + 400), text_size = 20)
+    cool_text_fx(canvas, f'Погода в {city_name} : {country}', (10, sun_moon_h), icon_size, (distance + icon_size, icon_size//2), text_size = 25)
+    cool_text_fx(canvas, f'{conditions}', (10, sun_moon_h), icon_size, (distance + icon_size, icon_size//2 + text_dist), text_size = 25)
+    cool_text_fx(canvas, f'Температура: {temp} ˚C', (10, sun_moon_h), icon_size, (distance + icon_size, icon_size//2 + 2*text_dist), text_size = 25, text_color = 'white')
+    cool_text_fx(canvas, f'Ощущается как: {feels_like} ˚C', (10, sun_moon_h), icon_size, (distance + icon_size, icon_size//2 + 3*text_dist), text_size = 25)
+    cool_text_fx(canvas, f'Местное время: {time}', (10, sun_moon_h), icon_size, (distance + icon_size, icon_size//2 + 4*text_dist), text_size = 20)
+    cool_text_fx(canvas, f'Скорость ветра: {wind_speed} km/h', (10, sun_moon_h), icon_size, (distance + icon_size, icon_size//2 + 5*text_dist), text_size = 20)
 
     #cool_text_fx('+30 C', (10, 10), 300, (220 + 250 + (1000/(screen_center_x - e.x)), 300 + (1000/(screen_center_y - e.y))))
-    #sun_diam_range = list(range(100, 350, 20)) + list(range(350, 300, -20))
-    #for d in sun_diam_range:
-        #draw_sun(10, 10, d)
+
     if conditions in ["Partly cloudy", "Mist"]:
-        draw_circ_lines(canvas, 330, 10, sun_moon_h, -70, 70, thickness = 88)
+        draw_circ_lines(canvas, icon_size + circ_d, 10, sun_moon_h, -70, 70, thickness = 88)
+
     if day_night == 'ночь':
-        draw_moon(canvas, 10, sun_moon_h, 300)
+        draw_moon(canvas, 10, sun_moon_h, icon_size)
     else:
-        draw_sun(canvas, 10, sun_moon_h, 300)
+        draw_sun(canvas, 10, sun_moon_h, icon_size)
 
 
 if __name__ == '__main__':
@@ -285,8 +315,8 @@ if __name__ == '__main__':
     #H, W = root.winfo_height(), root.winfo_width()
     #print(H, W)
     H, W = 720, 500
-    draw_grad(canvas, (0, 0, 10), (247, 247, 240), H, W)
+    draw_grad(canvas, (0, 0, 10), (247, 247, 240), W, H)
 
     #canvas.bind('<Motion>', _)
-    canvas.bind('<1>', lambda e : gui(canvas, get_weather_data('tokyo')))#lambda e : draw_grad(Color.random(), Color.random(), H, W))
+    canvas.bind('<1>', lambda e : gui(canvas, 1600, 1200, get_weather_data('tokyo')))#lambda e : draw_grad(Color.random(), Color.random(), H, W))
     root.mainloop()
