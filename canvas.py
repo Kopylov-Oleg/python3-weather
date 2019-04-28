@@ -232,7 +232,7 @@ def draw_sky(canvas, conditions, day_night, area_size = (1280, 720), step_size =
     draw_grad(canvas, color_1, color_2, W, H, step_size=step_size)
 
 
-def gui(canvas, weather_data):
+def gui(canvas, width, height, weather_data):
     if 'error' in weather_data:
         color_1 = Color([100, 103, 109])
         color_2 = Color([7, 4, 1])
