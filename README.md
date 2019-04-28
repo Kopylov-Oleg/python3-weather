@@ -1,7 +1,7 @@
 # python3-weather
 Семестровый проект "Погода в мире" по курсу "Совместная разработка приложений на Python3" 
 ### Постановка задачи: 
-Создание программы, позволяющей узнать погоду в крупных городах мира на данный момент и выводящую информацию об этом с помощью текста и *очень* приятной анимации. 
+Создание программы, позволяющей узнать погоду в крупных городах мира на данный момент и выводящую информацию об этом с помощью текста и *очень* приятной графики. 
 ### Авторы: 
 > [Копылов Олег 424](https://github.com/Kopylov-Oleg)
 
@@ -9,14 +9,14 @@
 ### Project roadmap:
 ![alt text](https://raw.githubusercontent.com/AVasK/python3-weather/master/plan.jpg)
 - [x] Step 1
-- [x] Step 2 (*90%* complete)
+- [x] Step 2
 - [x] Step 3
-- [x] Step 4 (Work In Progress)
+- [x] Step 4
 
 ### Examples: 
 ![alt text](https://raw.githubusercontent.com/AVasK/python3-weather/master/examples.jpg)
 
-### Схема GUI интерфейса:
+### Изначальная схема GUI интерфейса:
 ![alt text](https://pp.userapi.com/c854128/v854128419/26f3e/N55nEweiqCY.jpg)
 
 ### Используемые API:
