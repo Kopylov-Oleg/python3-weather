@@ -22,7 +22,7 @@ class WeatherApp(Frame):
         self.ShowWeather = Button(self, text="Узнать погоду", command=self.show_weather)
         self.ShowWeather.grid(row=10, column=3, columnspan = 3, sticky=N+E+S+W)
 
-        self.grid_rowconfigure(0, weight=5, pad=5)
+        self.grid_rowconfigure(0, weight=15, pad=5)
         self.grid_rowconfigure(10, weight=1)
 
         self.grid_columnconfigure(3, weight=1)
