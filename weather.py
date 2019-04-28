@@ -3,6 +3,8 @@ from tkinter import messagebox
 from weather_logic import *
 from canvas import gui
 
+import time
+
 class WeatherApp(Frame):
     def __init__(self, master=None):
         Frame.__init__(self, master)
@@ -12,15 +14,28 @@ class WeatherApp(Frame):
         self.grid(sticky=N+E+S+W)
         self.new_city = StringVar()
         self.create()
+        self.curr_city = None
+
+
+        self.update_clock()
+
+
         #self.adjust()
+
+    def update_clock(self):
+        if self.curr_city != self.new_city.get():
+            self.curr_city = self.new_city.get()
+            self.show_weather()
+            self.after(1100, self.update_clock)
+        else:
+            self.Canvas.draw_weather(self.Canvas.winfo_width(), self.Canvas.winfo_height())
+            self.after(700, self.update_clock)
 
     def create(self):
         self.Canvas = Paint(self, default_city="")
         self.Canvas.grid(row=0, column=0, rowspan=9, columnspan=6, sticky=N+E+S+W)
         self.CityEntry = Entry(self, textvariable=self.new_city)
-        self.CityEntry.grid(row=10, column=0, columnspan = 3, sticky=N+E+S+W)
-        self.ShowWeather = Button(self, text="Узнать погоду", command=self.show_weather)
-        self.ShowWeather.grid(row=10, column=3, columnspan = 3, sticky=N+E+S+W)
+        self.CityEntry.grid(row=10, column=0, columnspan = 6, sticky=N+E+S+W)
 
         self.grid_rowconfigure(0, weight=15, pad=5)
         self.grid_rowconfigure(10, weight=1)

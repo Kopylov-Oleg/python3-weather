@@ -24,7 +24,19 @@ class Color():
         return iter(self.rgb)
 
     def clamp(self):
-        return Color(min(255, c) for c in [max(0, c) for c in self.rgb])
+        r, g, b = self.rgb
+        def clamp_one(v):
+            if v >= 255:
+                v = 255
+            if v <= 0:
+                v = 0
+            return v
+
+        r = clamp_one(r)
+        g = clamp_one(g)
+        b = clamp_one(b)
+
+        return Color([r, g, b])
 
     def __add__(self, other):
         if type(other) in (int, float):
@@ -236,6 +248,53 @@ def draw_sky(canvas, conditions, day_night, area_size = (720, 1080), step_size =
         color_2 = (color_2 + color_n2) // 2
 
     draw_grad(canvas, color_1, color_2, W, H, step_size=step_size)
+    if "thunder" in conditions:
+        draw_lighting(canvas, H, W)
+
+
+
+def draw_lighting_from(canvas, x, y, W, H, steps = 2, depth=8):
+    if random.random() >= 0.3:
+        return
+
+    if depth <= 0:
+        return
+
+    x1, y1 = x, y
+
+    for branches in range(random.choice(list(range(4)))):
+        line_width = 1
+        line_color = Color([171, 194, 253])
+
+        y1 = math.floor(y + random.random() * 200)
+        x1 = math.floor(x + (random.random() - 0.5) * 400)
+        dec = (line_width - 1) / steps
+        canvas.create_line(x, y, x1, y1, fill=line_color.to_hex(), width=line_width)
+
+        draw_lighting_from(canvas, x1, y1, W, H, steps, depth=depth-1)
+
+
+def draw_lighting(canvas, W, H, steps = 2):
+    if random.random() <= 0.5:
+        return
+
+    x, y = random.randint(10, W), 0
+    x1, y1 = x, y
+
+    for segments in range(20):
+        line_width = 2
+        line_color = Color([171, 194, 253])
+        x, y = x1, y1
+        for branches in range(random.choice(list(range(4)))):
+
+            y1 = math.floor(y + random.random() * 400)
+            x1 = math.floor(x + (random.random() - 0.5) * 400)
+            dec = (line_width - 1) / steps
+            for i in range(steps):
+                canvas.create_line(x, y, x1, y1, fill=line_color.to_hex(), width=line_width)
+                line_width = math.ceil(line_width - dec)
+                line_color = (line_color + Color([90, 90, 90])).clamp()
+            draw_lighting_from(canvas, x1, y1, W, H, steps)
 
 
 def gui(canvas, W, H, weather_data):
@@ -317,6 +376,6 @@ if __name__ == '__main__':
     H, W = 720, 500
     draw_grad(canvas, (0, 0, 10), (247, 247, 240), W, H)
 
-    #canvas.bind('<Motion>', _)
+    canvas.bind('<Motion>', lambda e : gui(canvas, 1600, 1200, get_weather_data('brescia')))
     canvas.bind('<1>', lambda e : gui(canvas, 1600, 1200, get_weather_data('tokyo')))#lambda e : draw_grad(Color.random(), Color.random(), H, W))
     root.mainloop()
