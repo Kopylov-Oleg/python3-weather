@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import messagebox
 from weather_logic import *
+from canvas import gui
 
 class WeatherApp(Frame):
     def __init__(self, master=None):
@@ -11,11 +12,10 @@ class WeatherApp(Frame):
         self.grid(sticky=N+E+S+W)
         self.new_city = StringVar()
         self.create()
-        self.adjust()
-        self.bind('<Configure>', self.configure)
+        self.adjust()        
 
     def create(self):
-        self.Canvas = Paint(self, default_city="moscow")
+        self.Canvas = Paint(self, default_city="")
         self.Canvas.grid(row=0, column=0, rowspan=9, columnspan=5, sticky=N+E+S+W)
         self.CityEntry = Entry(self, textvariable=self.new_city)
         self.CityEntry.grid(row=10, column=1, sticky=N+E+S+W)
@@ -28,28 +28,28 @@ class WeatherApp(Frame):
         for i in range(12):
             self.rowconfigure(i, weight=1, minsize = 30)
 
-    def show_weather(self):        
+    def show_weather(self):
         self.Canvas.city.set(self.new_city.get())
-        self.Canvas.draw_weather()
-
-    def configure(self, event):
-        if (self.new_city.get() != ""):
-            self.Canvas.draw_weather()
+        self.Canvas.weather_data = get_weather_data(self.new_city.get())
+        self.Canvas.draw_weather(self.Canvas.winfo_width(), self.Canvas.winfo_height())
 
 class Paint(Canvas):
     def __init__(self, master=None, *ap, default_city,**an):
         self.city = StringVar()
         self.city.set(default_city)
+        self.weather_data = ""
         Canvas.__init__(self, master, *ap, **an)
+        self.bind('<Configure>', self.configure)
+    
+    def configure(self, event):
+        if (self.city.get() != ""):
+            #messagebox.showinfo("Размер окна:", str(str(event.width) + " x " + str(event.height)))
+            self.draw_weather(event.width, event.height)
 
-    def draw_weather(self):
+    def draw_weather(self, width, height):
         self.delete("all")
-        #messagebox.showinfo("Вы ввели", get_weather_data(self.city))
-        self.draw_weather_picture()
-        self.draw_city()
-        self.draw_time()
-        self.draw_conditions()
-        self.draw_temp()
+        messagebox.showinfo("Размер окна:", str(str(width) + " x " + str(height)))
+        gui(self, width, height, self.weather_data)
 
     def draw_city(self):
         self.create_text(self.winfo_width() / 4, self.winfo_height() / 5, text = self.city.get())
@@ -64,7 +64,7 @@ class Paint(Canvas):
 
     def draw_temp(self):
         temp = str(get_real_temp(self.city.get())) + "°C"
-        self.create_text(3 * self.winfo_width() / 4, 4 * self.winfo_height() / 5, text = temp)    
+        self.create_text(3 * self.winfo_width() / 4, 4 * self.winfo_height() / 5, text = temp)
 
     def draw_weather_picture(self):
         conditions = str(get_conditions(self.city.get()))
@@ -119,4 +119,3 @@ class Paint(Canvas):
 
 app = WeatherApp()
 app.mainloop()
-
