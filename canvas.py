@@ -62,11 +62,11 @@ def rgb_to_hex(rgb):
     return rgb.to_hex()
 
 
-def draw_grad(canvas, start_color, end_color, H=200, W=400, step_size=20):
+def draw_grad(canvas, start_color, end_color, H=800, W=1280, step_size=20):
     start_color = Color(start_color)
     end_color = Color(end_color)
     value = start_color
-    steps = H // step_size
+    steps = H / step_size
     inc = (start_color - end_color) / steps
 
     for y in range(0, H, step_size):
@@ -76,6 +76,7 @@ def draw_grad(canvas, start_color, end_color, H=200, W=400, step_size=20):
             canvas.create_line(x, y, x + W, y, fill=rgb_to_hex(value.clamp()),width=step_size)
 
         value += inc
+        value = Color(math.floor(v) for v in value.rgb).clamp()
 
 
 def draw_grad_circle(canvas, pos_x, pos_y, diameter, color_1, color_2, step_size, percent = 30):
@@ -189,7 +190,7 @@ def draw_sky(canvas, conditions, day_night, area_size = (1280, 720), step_size =
 
     'Light rain' : [
         Color([180, 145, 209]),
-        Color([185, 180, 210])
+        Color([105, 100, 210])
     ],
 
     'Overcast' : [
@@ -218,8 +219,8 @@ def draw_sky(canvas, conditions, day_night, area_size = (1280, 720), step_size =
     ],
 
     'night' : [
-        Color([58, 124, 137]),
-        Color([24, 63, 104])
+        Color([124, 143, 169]),
+        Color([20, 36, 57])
     ]
     }
 
@@ -232,6 +233,14 @@ def draw_sky(canvas, conditions, day_night, area_size = (1280, 720), step_size =
 
 
 def gui(canvas, weather_data):
+    if 'error' in weather_data:
+        color_1 = Color([100, 103, 109])
+        color_2 = Color([7, 4, 1])
+        draw_grad(canvas, color_1, color_2, 720, 720)
+        cool_text_fx(canvas, 'Город не найден :(', (20, 20), 330, (220 + 330, 330//2))
+        draw_dark_sphere(canvas, 20, 20, 330)
+        return
+
 
     d = weather_data
     city_name = d['location']['name']
@@ -245,9 +254,10 @@ def gui(canvas, weather_data):
     time = d['location']['localtime'].split()[1]
 
     h, m = parse_time(time)
-    sun_moon_h = 350 * elevation(h)
+    sun_moon_h = 400 - 200 * elevation(h)
+    #print(elevation(h))
 
-    draw_sky(canvas, conditions, day_night) # Drawing background
+    draw_sky(canvas, conditions, day_night, step_size = 10) # Drawing background
 
     cool_text_fx(canvas, f'Погода в {city_name} : {country}', (10, sun_moon_h), 300, (220 + 300, 300//2))
     cool_text_fx(canvas, f'{conditions}', (10, sun_moon_h), 300, (220 + 300, 300//2 + 100), text_size = 25)
@@ -274,7 +284,7 @@ if __name__ == '__main__':
 
     #H, W = root.winfo_height(), root.winfo_width()
     #print(H, W)
-    H, W = 1280, 720
+    H, W = 720, 500
     draw_grad(canvas, (0, 0, 10), (247, 247, 240), H, W)
 
     #canvas.bind('<Motion>', _)
