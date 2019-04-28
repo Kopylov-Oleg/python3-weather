@@ -30,24 +30,26 @@ class WeatherApp(Frame):
 
     def show_weather(self):
         self.Canvas.city.set(self.new_city.get())
+        self.Canvas.weather_data = get_weather_data(self.new_city.get())
         self.Canvas.draw_weather()
 
 class Paint(Canvas):
     def __init__(self, master=None, *ap, default_city,**an):
         self.city = StringVar()
         self.city.set(default_city)
+        self.weather_data = ""
         Canvas.__init__(self, master, *ap, **an)
         self.bind('<Configure>', self.configure)
     
     def configure(self, event):
         if (self.city.get() != ""):
-            messagebox.showinfo("Вы ввели", get_weather_data(self.city.get()))
-            #self.Canvas.draw_weather()
+            #messagebox.showinfo("Вы ввели", get_weather_data(self.city.get()))
+            self.draw_weather()
 
     def draw_weather(self):
         self.delete("all")
         #messagebox.showinfo("Вы ввели", get_weather_data(self.city.get()))
-        gui(self, get_weather_data(self.city.get()))
+        gui(self, self.weather_data)
 
     def draw_city(self):
         self.create_text(self.winfo_width() / 4, self.winfo_height() / 5, text = self.city.get())
