@@ -20,7 +20,7 @@ class WeatherApp(Frame):
         self.CityEntry = Entry(self, textvariable=self.new_city)
         self.CityEntry.grid(row=10, column=0, columnspan = 3, sticky=N+E+S+W)
         self.ShowWeather = Button(self, text="Узнать погоду", command=self.show_weather)
-        self.ShowWeather.grid(row=10, column=4, columnspan = 2, sticky=N+E+S+W)
+        self.ShowWeather.grid(row=10, column=3, columnspan = 3, sticky=N+E+S+W)
 
         self.grid_rowconfigure(0, weight=5, pad=5)
         self.grid_rowconfigure(10, weight=1)
