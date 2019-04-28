@@ -43,8 +43,8 @@ class Paint(Canvas):
     
     def configure(self, event):
         if (self.city.get() != ""):
-            #messagebox.showinfo("Вы ввели", get_weather_data(self.city.get()))
-            self.draw_weather()
+            messagebox.showinfo("Размер окна:", str(str(event.width) + " x " + str(event.height)))
+            #self.draw_weather()
 
     def draw_weather(self):
         self.delete("all")
