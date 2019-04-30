@@ -1,0 +1,41 @@
+# python3-weather.
+# Kopylov Oleg <kopylov.oleg.7@mail.ru>, 2019.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: python3-weather\n"
+"POT-Creation-Date: 2019-04-30 16:13+MSK\n"
+"PO-Revision-Date: 2019-04-30 16:16+MSK\n"
+"Last-Translator: Kopylov Oleg <kopylov.oleg.7@mail.ru>\n"
+"Language-Team: Russian\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: ENCODING\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: canvas.py:334
+msgid "City not found :("
+msgstr "Город не найден :("
+
+#: canvas.py:355
+msgid "Weather in"
+msgstr "Погода в"
+
+#: canvas.py:358
+msgid "Temperature"
+msgstr "Температура"
+
+#: canvas.py:360
+msgid "Feels like"
+msgstr "Ощущается как"
+
+#: canvas.py:362
+msgid "Local time"
+msgstr "Местное время"
+
+#: canvas.py:364
+msgid "Windspeed"
+msgstr "Скорость ветра"
+
