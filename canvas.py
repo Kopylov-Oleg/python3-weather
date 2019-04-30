@@ -329,7 +329,7 @@ def gui(canvas, W, H, weather_data):
         color_1 = Color([100, 103, 109])
         color_2 = Color([7, 4, 1])
         draw_grad(canvas, color_1, color_2, H, W)
-        cool_text_fx(canvas, 'Город не найден :(', (20, 20), icon_size, (distance + icon_size, icon_size//2), text_size = ets)
+        cool_text_fx(canvas, _('Город не найден :('), (20, 20), icon_size, (distance + icon_size, icon_size//2), text_size = ets)
         draw_dark_sphere(canvas, 20, 20, icon_size)
         return
 
@@ -350,13 +350,17 @@ def gui(canvas, W, H, weather_data):
     #print(elevation(h))
 
     draw_sky(canvas, conditions, day_night, area_size = (H, W), step_size = 10) # Drawing background
-
-    cool_text_fx(canvas, f'Погода в {city_name} : {country}', (10, sun_moon_h), icon_size, (distance + icon_size, icon_size//2), text_size = 25)
+    city_name_text = _('Погода в')
+    cool_text_fx(canvas, f'{city_name_text} {city_name} : {country}', (10, sun_moon_h), icon_size, (distance + icon_size, icon_size//2), text_size = 25)
     cool_text_fx(canvas, f'{conditions}', (10, sun_moon_h), icon_size, (distance + icon_size, icon_size//2 + text_dist), text_size = 25)
-    cool_text_fx(canvas, f'Температура: {temp} ˚C', (10, sun_moon_h), icon_size, (distance + icon_size, icon_size//2 + 2*text_dist), text_size = 25, text_color = 'white')
-    cool_text_fx(canvas, f'Ощущается как: {feels_like} ˚C', (10, sun_moon_h), icon_size, (distance + icon_size, icon_size//2 + 3*text_dist), text_size = 25)
-    cool_text_fx(canvas, f'Местное время: {time}', (10, sun_moon_h), icon_size, (distance + icon_size, icon_size//2 + 4*text_dist), text_size = 20)
-    cool_text_fx(canvas, f'Скорость ветра: {wind_speed} km/h', (10, sun_moon_h), icon_size, (distance + icon_size, icon_size//2 + 5*text_dist), text_size = 20)
+    temp_text = _('Температура')
+    cool_text_fx(canvas, f':{temp_text} {temp} ˚C', (10, sun_moon_h), icon_size, (distance + icon_size, icon_size//2 + 2*text_dist), text_size = 25, text_color = 'white')
+    feels_like_text = _('Ощущается как')
+    cool_text_fx(canvas, f'{feels_like_text}: {feels_like} ˚C', (10, sun_moon_h), icon_size, (distance + icon_size, icon_size//2 + 3*text_dist), text_size = 25)
+    time_text = _('Местное время')
+    cool_text_fx(canvas, f'{time_text}: {time}', (10, sun_moon_h), icon_size, (distance + icon_size, icon_size//2 + 4*text_dist), text_size = 20)
+    wind_speed_text = _('Скорость ветра')
+    cool_text_fx(canvas, f'{wind_speed_text}: {wind_speed} km/h', (10, sun_moon_h), icon_size, (distance + icon_size, icon_size//2 + 5*text_dist), text_size = 20)
 
     #cool_text_fx('+30 C', (10, 10), 300, (220 + 250 + (1000/(screen_center_x - e.x)), 300 + (1000/(screen_center_y - e.y))))
 
