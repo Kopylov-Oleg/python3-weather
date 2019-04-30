@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import ttk
 import random
 import math
+import gettext
 
 from weather_logic import get_weather_data
 
@@ -196,7 +197,7 @@ def draw_sky(canvas, conditions, day_night, area_size = (720, 1080), step_size =
     ],
 
     'Mist' : [
-        Color([185+50, 204+50, 194+50]),
+        Color([185, 204, 194]),
         Color([149, 168, 191])
     ],
 
@@ -318,6 +319,7 @@ def gui(canvas, W, H, weather_data):
         icon_size = 200
         distance = 100
         circ_d = 20
+        ets = 25
     else:
         text_dist = 100
         icon_size = 300
@@ -329,7 +331,7 @@ def gui(canvas, W, H, weather_data):
         color_1 = Color([100, 103, 109])
         color_2 = Color([7, 4, 1])
         draw_grad(canvas, color_1, color_2, H, W)
-        cool_text_fx(canvas, _('Город не найден :('), (20, 20), icon_size, (distance + icon_size, icon_size//2), text_size = ets)
+        cool_text_fx(canvas, _('City not found :('), (20, 20), icon_size, (distance + icon_size, icon_size//2), text_size = ets)
         draw_dark_sphere(canvas, 20, 20, icon_size)
         return
 
@@ -350,16 +352,16 @@ def gui(canvas, W, H, weather_data):
     #print(elevation(h))
 
     draw_sky(canvas, conditions, day_night, area_size = (H, W), step_size = 10) # Drawing background
-    city_name_text = _('Погода в')
+    city_name_text = _('Weather in')
     cool_text_fx(canvas, f'{city_name_text} {city_name} : {country}', (10, sun_moon_h), icon_size, (distance + icon_size, icon_size//2), text_size = 25)
     cool_text_fx(canvas, f'{conditions}', (10, sun_moon_h), icon_size, (distance + icon_size, icon_size//2 + text_dist), text_size = 25)
-    temp_text = _('Температура')
-    cool_text_fx(canvas, f':{temp_text} {temp} ˚C', (10, sun_moon_h), icon_size, (distance + icon_size, icon_size//2 + 2*text_dist), text_size = 25, text_color = 'white')
-    feels_like_text = _('Ощущается как')
+    temp_text = _('Temperature')
+    cool_text_fx(canvas, f'{temp_text}: {temp} ˚C', (10, sun_moon_h), icon_size, (distance + icon_size, icon_size//2 + 2*text_dist), text_size = 25, text_color = 'white')
+    feels_like_text = _('Feels like')
     cool_text_fx(canvas, f'{feels_like_text}: {feels_like} ˚C', (10, sun_moon_h), icon_size, (distance + icon_size, icon_size//2 + 3*text_dist), text_size = 25)
-    time_text = _('Местное время')
+    time_text = _('Local time')
     cool_text_fx(canvas, f'{time_text}: {time}', (10, sun_moon_h), icon_size, (distance + icon_size, icon_size//2 + 4*text_dist), text_size = 20)
-    wind_speed_text = _('Скорость ветра')
+    wind_speed_text = _('Windspeed')
     cool_text_fx(canvas, f'{wind_speed_text}: {wind_speed} km/h', (10, sun_moon_h), icon_size, (distance + icon_size, icon_size//2 + 5*text_dist), text_size = 20)
 
     #cool_text_fx('+30 C', (10, 10), 300, (220 + 250 + (1000/(screen_center_x - e.x)), 300 + (1000/(screen_center_y - e.y))))
@@ -372,6 +374,10 @@ def gui(canvas, W, H, weather_data):
     else:
         draw_sun(canvas, 10, sun_moon_h, icon_size)
 
+import os.path
+
+datapath = os.path.dirname(sys.argv[0])
+gettext.install('canvas', datapath, names=("ngettext",))
 
 if __name__ == '__main__':
 

@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 from weather_logic import *
 from canvas import gui
+#import gettext
 
 import time
 
@@ -144,5 +145,6 @@ class Paint(Canvas):
         color = 'gold4'
         self.create_oval(self.winfo_width()/4, self.winfo_height()/4, 3*self.winfo_width()/4, 3*self.winfo_height()/4, fill=color, width=3)
 
+#gettext.install('canvas', './')
 app = WeatherApp()
 app.mainloop()
