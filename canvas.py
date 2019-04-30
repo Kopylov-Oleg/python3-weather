@@ -29,12 +29,10 @@ if __name__ == '__main__':
 class Color():
     def __init__(self, rgb):
         self.rgb = list(rgb)
-        #self.rgb = [min(255, c) for c in [max(0, c) for c in self.rgb]]
-
+        
     @classmethod
     def random(cls):
         return cls(random.randint(0, 255) for _ in range(3))
-
 
     def __iter__(self):
         return iter(self.rgb)
@@ -85,6 +83,8 @@ class Color():
     def __str__(self):
         return '(' + ', '.join(list(map(str, self.rgb))) + ')'
 
+    def __eq__(self, other):
+        return self.rgb == other.rgb
 
 def rgb_to_hex(rgb):
     return rgb.to_hex()

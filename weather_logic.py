@@ -58,30 +58,23 @@ class CityData:
 # решено с использованием lru_cache. Работает нормально, тк не подразумевается что пользователь будет держать приложение часами в online. Если это так - убираем lru_cache и просто используем больше обращений к серверу.
 # Пока что в любом случае с помощью кэша тратим меньше обращений к серверу.
 
-def get_time(city):
-    d = get_weather_data(city)
+def get_time(d):
     return d['location']['localtime'].split()[1]
 
-def get_real_temp(city):
-    d = get_weather_data(city)
+def get_real_temp(d):
     return d['current']['temp_c']
 
-def get_feels_like(city):
-    d = get_weather_data(city)
+def get_feels_like(d):
     return d['current']['feelslike_c']
 
-def get_conditions(city):
-    d = get_weather_data(city)
+def get_conditions(d):
     return d['current']['condition']['text']
 
-def get_day_night(city):
-    d = get_weather_data(city)
+def get_day_night(d):
     return ['ночь', 'день'][d['current']['is_day']]
 
-def get_wind_speed(city):
-    d = get_weather_data(city)
+def get_wind_speed(d):
     return d['current']['wind_kph']
 
-def get_visibility(city):
-    d = get_weather_data(city)
+def get_visibility(d):
     return d['current']['vis_km']
