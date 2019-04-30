@@ -4,6 +4,21 @@ import random
 import math
 import gettext
 
+import locale
+
+try:
+    cfg = open('lang.cfg', 'r')
+except:
+    lang = locale.getdefaultlocale()
+    if lang[0].startswith('en'):
+        sys_lang = 'EN'
+    if lang[0].startswith('ru'):
+        sys_lang = 'RU'    
+else:
+    sys_lang = cfg.readline().split(':')[1]
+    
+    
+
 from weather_logic import get_weather_data
 
 if __name__ == '__main__':
@@ -182,6 +197,34 @@ def elevation(h):
 def night(time):
     return 6 <= parse_time(time)[0] <= 23
 
+def translate(conditions, lang):
+    
+    translate = {
+        'Sunny' : 'Солнечно',
+        'Partly cloudy' : 'Частичная облачность',
+        'Mist' : 'Туман',
+        'Light rain' : 'Легкий дождь',
+        'Overcast' : 'Пасмурно',
+        'Clear' : 'Ясно',
+        "Patchy light rain with thunder" : 'Местами легкий дождь с грозой',
+        'Moderate rain' : 'Умеренный дождь',
+        "Moderate or heavy rain with thunder" : 'Умеренный-сильный дождь с грозой',
+        'city not found' : 'город не найден',
+        'night' : 'ночь',
+        'day' : 'день',
+        'Weather in' : 'Погода в',
+        'Temperature' : 'Температура',
+        'Feels like' : 'Ощущается как',
+        'Windspeed' : 'Скорость ветра',
+        'Local time' : 'Местное время',
+    }
+    
+    if lang == 'RU' and conditions in translate:
+        return translate[conditions]
+    else:
+        return conditions
+    
+
 def draw_sky(canvas, conditions, day_night, area_size = (720, 1080), step_size = 8):
     H, W = area_size
 
@@ -243,7 +286,7 @@ def draw_sky(canvas, conditions, day_night, area_size = (720, 1080), step_size =
     except:
         color_1 = Color([100, 103, 109])
         color_2 = Color([7, 4, 1])
-    if day_night == 'ночь':
+    if day_night == 'night':
         color_n1, color_n2 = colors['night']
         color_1 = (color_1 + color_n1) // 2
         color_2 = (color_2 + color_n2) // 2
@@ -342,7 +385,7 @@ def gui(canvas, W, H, weather_data):
     temp = d['current']['temp_c']
     feels_like = d['current']['feelslike_c']
     conditions = d['current']['condition']['text']
-    day_night = ['ночь', 'день'][d['current']['is_day']]
+    day_night = ['night', 'day'][d['current']['is_day']]
     wind_speed = d['current']['wind_kph']
     visibility = d['current']['vis_km']
     time = d['location']['localtime'].split()[1]
@@ -369,7 +412,7 @@ def gui(canvas, W, H, weather_data):
     if conditions in ["Partly cloudy", "Mist"]:
         draw_circ_lines(canvas, icon_size + circ_d, 10, sun_moon_h, -70, 70, thickness = 88)
 
-    if day_night == 'ночь':
+    if day_night == 'night':
         draw_moon(canvas, 10, sun_moon_h, icon_size)
     else:
         draw_sun(canvas, 10, sun_moon_h, icon_size)
@@ -392,3 +435,5 @@ if __name__ == '__main__':
     canvas.bind('<Motion>', lambda e : gui(canvas, 1600, 1200, get_weather_data('brescia')))
     canvas.bind('<1>', lambda e : gui(canvas, 1600, 1200, get_weather_data('tokyo')))#lambda e : draw_grad(Color.random(), Color.random(), H, W))
     root.mainloop()
+
+    
