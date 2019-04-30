@@ -3,6 +3,21 @@ from tkinter import ttk
 import random
 import math
 
+import locale
+
+try:
+    cfg = open('lang.cfg', 'r')
+except:
+    lang = locale.getdefaultlocale()
+    if lang[0].startswith('en'):
+        sys_lang = 'EN'
+    if lang[0].startswith('ru'):
+        sys_lang = 'RU'    
+else:
+    sys_lang = cfg.readline().split(':')[1]
+    
+    
+
 from weather_logic import get_weather_data
 
 if __name__ == '__main__':
@@ -181,6 +196,34 @@ def elevation(h):
 def night(time):
     return 6 <= parse_time(time)[0] <= 23
 
+def translate(conditions, lang):
+    
+    translate = {
+        'Sunny' : 'Солнечно',
+        'Partly cloudy' : 'Частичная облачность',
+        'Mist' : 'Туман',
+        'Light rain' : 'Легкий дождь',
+        'Overcast' : 'Пасмурно',
+        'Clear' : 'Ясно',
+        "Patchy light rain with thunder" : 'Местами легкий дождь с грозой',
+        'Moderate rain' : 'Умеренный дождь',
+        "Moderate or heavy rain with thunder" : 'Умеренный-сильный дождь с грозой',
+        'city not found' : 'город не найден',
+        'night' : 'ночь',
+        'day' : 'день',
+        'Weather in' : 'Погода в',
+        'Temperature' : 'Температура',
+        'Feels like' : 'Ощущается как',
+        'Windspeed' : 'Скорость ветра',
+        'Local time' : 'Местное время',
+    }
+    
+    if lang == 'RU' and conditions in translate:
+        return translate[conditions]
+    else:
+        return conditions
+    
+
 def draw_sky(canvas, conditions, day_night, area_size = (720, 1080), step_size = 8):
     H, W = area_size
 
@@ -196,7 +239,7 @@ def draw_sky(canvas, conditions, day_night, area_size = (720, 1080), step_size =
     ],
 
     'Mist' : [
-        Color([185+50, 204+50, 194+50]),
+        Color([185, 204, 194]),
         Color([149, 168, 191])
     ],
 
@@ -242,7 +285,7 @@ def draw_sky(canvas, conditions, day_night, area_size = (720, 1080), step_size =
     except:
         color_1 = Color([100, 103, 109])
         color_2 = Color([7, 4, 1])
-    if day_night == 'ночь':
+    if day_night == 'night':
         color_n1, color_n2 = colors['night']
         color_1 = (color_1 + color_n1) // 2
         color_2 = (color_2 + color_n2) // 2
@@ -318,6 +361,7 @@ def gui(canvas, W, H, weather_data):
         icon_size = 200
         distance = 100
         circ_d = 20
+        ets = 25
     else:
         text_dist = 100
         icon_size = 300
@@ -329,7 +373,7 @@ def gui(canvas, W, H, weather_data):
         color_1 = Color([100, 103, 109])
         color_2 = Color([7, 4, 1])
         draw_grad(canvas, color_1, color_2, H, W)
-        cool_text_fx(canvas, 'Город не найден :(', (20, 20), icon_size, (distance + icon_size, icon_size//2), text_size = ets)
+        cool_text_fx(canvas, translate('city not found', sys_lang), (20, 20), icon_size, (distance + icon_size, icon_size//2), text_size = ets)
         draw_dark_sphere(canvas, 20, 20, icon_size)
         return
 
@@ -340,7 +384,7 @@ def gui(canvas, W, H, weather_data):
     temp = d['current']['temp_c']
     feels_like = d['current']['feelslike_c']
     conditions = d['current']['condition']['text']
-    day_night = ['ночь', 'день'][d['current']['is_day']]
+    day_night = ['night', 'day'][d['current']['is_day']]
     wind_speed = d['current']['wind_kph']
     visibility = d['current']['vis_km']
     time = d['location']['localtime'].split()[1]
@@ -351,19 +395,19 @@ def gui(canvas, W, H, weather_data):
 
     draw_sky(canvas, conditions, day_night, area_size = (H, W), step_size = 10) # Drawing background
 
-    cool_text_fx(canvas, f'Погода в {city_name} : {country}', (10, sun_moon_h), icon_size, (distance + icon_size, icon_size//2), text_size = 25)
-    cool_text_fx(canvas, f'{conditions}', (10, sun_moon_h), icon_size, (distance + icon_size, icon_size//2 + text_dist), text_size = 25)
-    cool_text_fx(canvas, f'Температура: {temp} ˚C', (10, sun_moon_h), icon_size, (distance + icon_size, icon_size//2 + 2*text_dist), text_size = 25, text_color = 'white')
-    cool_text_fx(canvas, f'Ощущается как: {feels_like} ˚C', (10, sun_moon_h), icon_size, (distance + icon_size, icon_size//2 + 3*text_dist), text_size = 25)
-    cool_text_fx(canvas, f'Местное время: {time}', (10, sun_moon_h), icon_size, (distance + icon_size, icon_size//2 + 4*text_dist), text_size = 20)
-    cool_text_fx(canvas, f'Скорость ветра: {wind_speed} km/h', (10, sun_moon_h), icon_size, (distance + icon_size, icon_size//2 + 5*text_dist), text_size = 20)
+    cool_text_fx(canvas, f"{translate('Weather in', sys_lang)} {city_name} : {country}", (10, sun_moon_h), icon_size, (distance + icon_size, icon_size//2), text_size = 25)
+    cool_text_fx(canvas, f"{translate(conditions, lang=sys_lang)}", (10, sun_moon_h), icon_size, (distance + icon_size, icon_size//2 + text_dist), text_size = 25)
+    cool_text_fx(canvas, f"{translate('Temperature', sys_lang)}: {temp} ˚C", (10, sun_moon_h), icon_size, (distance + icon_size, icon_size//2 + 2*text_dist), text_size = 25, text_color = 'white')
+    cool_text_fx(canvas, f'{translate("Feels like", sys_lang)}: {feels_like} ˚C', (10, sun_moon_h), icon_size, (distance + icon_size, icon_size//2 + 3*text_dist), text_size = 25)
+    cool_text_fx(canvas, f'{translate("Local time", sys_lang)}: {time}', (10, sun_moon_h), icon_size, (distance + icon_size, icon_size//2 + 4*text_dist), text_size = 20)
+    cool_text_fx(canvas, f'{translate("Windspeed", sys_lang)}: {wind_speed} km/h', (10, sun_moon_h), icon_size, (distance + icon_size, icon_size//2 + 5*text_dist), text_size = 20)
 
     #cool_text_fx('+30 C', (10, 10), 300, (220 + 250 + (1000/(screen_center_x - e.x)), 300 + (1000/(screen_center_y - e.y))))
 
     if conditions in ["Partly cloudy", "Mist"]:
         draw_circ_lines(canvas, icon_size + circ_d, 10, sun_moon_h, -70, 70, thickness = 88)
 
-    if day_night == 'ночь':
+    if day_night == 'night':
         draw_moon(canvas, 10, sun_moon_h, icon_size)
     else:
         draw_sun(canvas, 10, sun_moon_h, icon_size)
@@ -382,3 +426,5 @@ if __name__ == '__main__':
     canvas.bind('<Motion>', lambda e : gui(canvas, 1600, 1200, get_weather_data('brescia')))
     canvas.bind('<1>', lambda e : gui(canvas, 1600, 1200, get_weather_data('tokyo')))#lambda e : draw_grad(Color.random(), Color.random(), H, W))
     root.mainloop()
+
+    
